@@ -33,6 +33,7 @@ export interface CaelumRegistryInterface extends utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "revokeCertificate(uint256,bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setLevel(uint256,uint256)": FunctionFragment;
@@ -78,6 +79,10 @@ export interface CaelumRegistryInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeCertificate",
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom",
@@ -149,6 +154,10 @@ export interface CaelumRegistryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "revokeCertificate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -327,6 +336,12 @@ export interface CaelumRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    revokeCertificate(
+      tokenId: BigNumberish,
+      hash: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
@@ -454,6 +469,12 @@ export interface CaelumRegistry extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  revokeCertificate(
+    tokenId: BigNumberish,
+    hash: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   "safeTransferFrom(address,address,uint256)"(
     from: string,
     to: string,
@@ -568,6 +589,12 @@ export interface CaelumRegistry extends BaseContract {
     paused(overrides?: CallOverrides): Promise<boolean>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    revokeCertificate(
+      tokenId: BigNumberish,
+      hash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -745,6 +772,12 @@ export interface CaelumRegistry extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    revokeCertificate(
+      tokenId: BigNumberish,
+      hash: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
@@ -874,6 +907,12 @@ export interface CaelumRegistry extends BaseContract {
     paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    revokeCertificate(
+      tokenId: BigNumberish,
+      hash: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

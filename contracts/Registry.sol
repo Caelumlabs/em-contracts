@@ -134,8 +134,16 @@ contract CaelumRegistry is
 
     function verifyCertificate(uint256 tokenId, bytes memory hash) public view returns (uint256 validFrom, uint256 validTo) {
       require(_exists(tokenId), 'ERC721Metadata: URI query for nonexistent token');
-      // require(_exists(dids[tokenId].certificates[hash]), 'Hash does not exist');
+      require(dids[tokenId].certificates[hash].validFrom != 0, 'Hash does not exist');
       return (dids[tokenId].certificates[hash].validFrom,dids[tokenId].certificates[hash].validTo);
+    }
+
+    function revokeCertificate(uint256 tokenId, bytes memory hash) public virtual {
+      require(_exists(tokenId), 'ERC721Metadata: URI query for nonexistent token');
+      require(ownerOf(tokenId) == msg.sender, 'Only owner can revoke certificates');
+      require(dids[tokenId].certificates[hash].validFrom != 0, 'Hash does not exist');
+      require(dids[tokenId].certificates[hash].validTo == 0, 'Hash already revoked');
+      dids[tokenId].certificates[hash].validTo = block.timestamp;
     }
 
     /**
@@ -152,7 +160,9 @@ contract CaelumRegistry is
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+		// Only minting allowed.
+		require(from == address(0), 'Transfer is not allowed');
+		super._beforeTokenTransfer(from, to, tokenId);
     }
 
     /**
