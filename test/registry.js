@@ -1,5 +1,5 @@
-const { expect } = require('chai');
 const { ethers } = require('hardhat');
+const { expect } = require('chai');
 
 const ADMIN_ROLE = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('ADMIN_ROLE'));
 
@@ -14,6 +14,7 @@ const getMetadata = (_uri) => {
 describe('CaelumRegistry', function () {
   let owner, org1, org2;
   let registry;
+  let hash;
 
   before('deploying', async () => {
     [owner, org1, org2 ] = await ethers.getSigners();
@@ -55,11 +56,27 @@ describe('CaelumRegistry', function () {
   it('Level 1 NFTs can add hashes', async () => {
     await registry.connect(org1).mint();
     await registry.connect(owner).setLevel(1,1);
-    const hash = await org1.signMessage('Hello world');
+    hash = await org1.signMessage('Hello world');
     await registry.connect(org1).addCertificate(1, hash);
-    
+	const verify = await registry.verifyCertificate(1, hash);
+    expect(verify.validTo).to.equal(0);
+    expect(verify.validFrom).to.not.equal(0);
   })
-  xit('A hash can be revoked', async () => {})
-  xit('Transfers are not allowed', async () => {})
+
+  it('A hash can be revoked', async () => {
+	await registry.connect(org1).revokeCertificate(1, hash);
+	const verify = await registry.verifyCertificate(1, hash);
+    expect(verify.validTo).to.not.equal(0);
+    expect(verify.validFrom).to.not.equal(0);
+  })
+
+  it('Only owner can add/revoke certificates', async () => {
+    await expect(registry.connect(org2).addCertificate(1, hash)).to.be.revertedWith('Only owner can add certificates');
+    await expect(registry.connect(org2).revokeCertificate(1, hash)).to.be.revertedWith('Only owner can revoke certificates');
+  })
+
+  it('Transfers are not allowed', async () => {
+    await expect(registry.connect(org1).transferFrom(org1.address, org2.address, 1)).to.be.revertedWith('Transfer is not allowed');
+  })
 
 });
