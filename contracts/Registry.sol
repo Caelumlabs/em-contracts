@@ -49,6 +49,7 @@ contract CaelumRegistry is
 
     struct Organization {
       uint256 level;
+      string publicKey;
       mapping(bytes => Hash) certificates;
     }
 
@@ -76,7 +77,7 @@ contract CaelumRegistry is
     /**
      * Mint a new Organization NFT.
      */
-    function mint() public virtual {
+    function mint(string memory publicKey) public virtual {
       uint256 nfts = balanceOf(msg.sender);
       require((nfts == 0), "Organisation already exists");
       uint256 tokenId = _tokenIdTracker.current();
@@ -84,6 +85,7 @@ contract CaelumRegistry is
       _tokenIdTracker.increment();
       Organization storage org = dids[tokenId];
       org.level = 0;
+      org.publicKey = publicKey;
     }
 
     /**
@@ -105,7 +107,8 @@ contract CaelumRegistry is
           string(
             abi.encodePacked(
               '{"name": "DID #', tokenId.toString(), '",',
-              '"level": ', dids[tokenId].level.toString(), 
+              '"level": ', dids[tokenId].level.toString(), ',',
+              '"publicKey": "', dids[tokenId].publicKey, '"',
               '}'
             )
           )

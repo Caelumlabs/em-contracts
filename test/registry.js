@@ -2,6 +2,7 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
 const ADMIN_ROLE = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('ADMIN_ROLE'));
+const PUBKEY = 'BMAkusVNhtXEq2L/NsjOhNHRzvaMOYNZ+27962GkfEGzdZq0rx/bdAKL8lnWehLqRuiypjBAIMzY2LeT9Gr/xAA='
 
 const getMetadata = (_uri) => {
   const uri = _uri.split(',')
@@ -28,7 +29,7 @@ describe('CaelumRegistry', function () {
 
   it('Should mint an NFT with level 0', async () => {
     expect( await registry.owner() ).to.equal(owner.address);
-    const tx = await registry.connect(owner).mint();
+    const tx = await registry.connect(owner).mint(PUBKEY);
     const receipt = await tx.wait();
     const args = receipt.events?.filter((x) => {return (x.event === 'Transfer')});
     const tokenId = parseInt(args[0].args['tokenId']);
@@ -38,11 +39,11 @@ describe('CaelumRegistry', function () {
     const json = getMetadata(uri);
     expect(json.name).to.equal('DID #0');
     expect(json.level).to.equal(0);
+    expect(json.publicKey).to.equal(PUBKEY);
 
   })
   it('Should NOT mint an NFT with level 0 with the same address', async () => {
-    await expect(registry.connect(owner).mint()).to.be.revertedWith("Organisation already exists");
-
+    await expect(registry.connect(owner).mint(PUBKEY)).to.be.revertedWith("Organisation already exists");
   })
 
   it('Owner Should approve one NFT -> Level 1', async () => {
@@ -54,11 +55,11 @@ describe('CaelumRegistry', function () {
   });
 
   it('Level 1 NFTs can add hashes', async () => {
-    await registry.connect(org1).mint();
+    await registry.connect(org1).mint(PUBKEY);
     await registry.connect(owner).setLevel(1,1);
     hash = await org1.signMessage('Hello world');
     await registry.connect(org1).addCertificate(1, hash);
-	const verify = await registry.verifyCertificate(1, hash);
+    const verify = await registry.verifyCertificate(1, hash);
     expect(verify.validTo).to.equal(0);
     expect(verify.validFrom).to.not.equal(0);
   })
@@ -78,5 +79,4 @@ describe('CaelumRegistry', function () {
   it('Transfers are not allowed', async () => {
     await expect(registry.connect(org1).transferFrom(org1.address, org2.address, 1)).to.be.revertedWith('Transfer is not allowed');
   })
-
 });
