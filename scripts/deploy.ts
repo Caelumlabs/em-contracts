@@ -12,7 +12,7 @@ async function main() {
   console.log("Registry deployed to:", registry.address);
 
   const provider = new ethers.providers.JsonRpcProvider(process.env.LOCALHOST_URL);
-  let relayer = new ethers.Wallet('c5cc827435f1973b7f046503c5d40476601a6afd5e0694d77cc99c37b7257156');
+  let relayer = new ethers.Wallet('99e7c4f8633d9b12303c41450e7ab7628392bf75a57f5e73070596bc83ffd6ce');
   relayer = relayer.connect(provider);
   const nft = new ethers.Contract(registry.address, RegistryContract.abi, relayer);
   await nft.mint();
