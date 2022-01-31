@@ -6,9 +6,9 @@ else
     if [ $1 == 'start' ]
     then
       echo "Start Ganache and deploy a Registry"
-      nohup ganache-cli --account="0x3e139eae34f41cecf4b4adccbeaa3a51c0b05c695733d8416df121b5b6d5e79b, 1000000000000000000000"  <&- &>/dev/null &
+      nohup ./node_modules/.bin/ganache-cli --account="0x3e139eae34f41cecf4b4adccbeaa3a51c0b05c695733d8416df121b5b6d5e79b, 1000000000000000000000"  <&- &>/dev/null &
       LOCALHOST_SEED=3e139eae34f41cecf4b4adccbeaa3a51c0b05c695733d8416df121b5b6d5e79b LOCALHOST_URL=http://localhost:8545 npx hardhat run ./scripts/deploy.ts --network localhost
-      echo "Ganache CLI up and running"
+      echo "Ganache CLI up and running: http://localhost:8545"
     fi
     if [ $1 == 'stop' ]
     then

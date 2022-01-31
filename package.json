@@ -21,12 +21,14 @@
     "@typechain/hardhat": "^4.0.0",
     "chai": "^4.3.4",
     "ethers": "^5.5.3",
+    "ganache-cli": "^6.12.2",
     "hardhat": "^2.8.3",
     "hardhat-gas-reporter": "^1.0.7",
     "solidity-coverage": "^0.7.18",
     "typechain": "^7.0.0"
   },
   "dependencies": {
+    "dotenv": "^15.0.0",
     "hardhat-watcher": "^2.1.1"
   }
 }
