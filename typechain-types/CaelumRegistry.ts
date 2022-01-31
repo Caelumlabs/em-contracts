@@ -26,7 +26,7 @@ export interface CaelumRegistryInterface extends utils.Interface {
     "burn(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "mint()": FunctionFragment;
+    "mint(string)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -67,7 +67,7 @@ export interface CaelumRegistryInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
-  encodeFunctionData(functionFragment: "mint", values?: undefined): string;
+  encodeFunctionData(functionFragment: "mint", values: [string]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -314,6 +314,7 @@ export interface CaelumRegistry extends BaseContract {
     ): Promise<[boolean]>;
 
     mint(
+      publicKey: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -450,6 +451,7 @@ export interface CaelumRegistry extends BaseContract {
   ): Promise<boolean>;
 
   mint(
+    publicKey: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -576,7 +578,7 @@ export interface CaelumRegistry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(overrides?: CallOverrides): Promise<void>;
+    mint(publicKey: string, overrides?: CallOverrides): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -750,6 +752,7 @@ export interface CaelumRegistry extends BaseContract {
     ): Promise<BigNumber>;
 
     mint(
+      publicKey: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -888,6 +891,7 @@ export interface CaelumRegistry extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
+      publicKey: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
