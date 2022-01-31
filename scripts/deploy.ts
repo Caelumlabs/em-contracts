@@ -15,7 +15,7 @@ async function main() {
   let relayer = new ethers.Wallet(`0x${process.env.LOCALHOST_SEED}`);
   relayer = relayer.connect(provider);
   const nft = new ethers.Contract(registry.address, RegistryContract.abi, relayer);
-  await nft.mint();
+  await nft.mint('');
   await nft.setLevel(0,2);
   console.log("First NFT minted with level 2:", registry.address);
 }
